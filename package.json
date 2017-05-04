@@ -1,0 +1,10 @@
+{
+    "name": "camayak-contentapi-shopify",
+    "version": "1.0.0",
+    "dependencies": {
+        "express": "latest",
+        "body-parser": "latest",
+        "request": "latest",
+        "camayak-contentapi": "latest"
+    }
+}
