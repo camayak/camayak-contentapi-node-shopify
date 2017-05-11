@@ -2,7 +2,6 @@
 module.exports = {
     shopifyAPIkey: process.env.shopifyAPIkey,
     shopifyPassword: process.env.shopifyPassword,
-    shopifySharedSecret: process.env.shopifySharedSecret,
     shopifyURL: process.env.shopifyURL,
 
     shopifyBlogID: process.env.shopifyBlogID,
