@@ -1,5 +1,5 @@
 {
-    "name": "Camayak Content API Shopify Integration",
+    "name": "Camayak Content API Shopify",
     "description": "A Node.js app for publishing to Shopify from Camayak.",
     "keywords": [
         "camayak",
