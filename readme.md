@@ -6,9 +6,15 @@ A Node.js app for publishing to Shopify from Camayak.
 
 Make sure you have [Node.js](http://nodejs.org/) installed.
 
+
 ```sh
 git clone git@github.com:pkmnct/camayak-contentapi-node-shopify.git
 cd camayak-contentapi-node-shopify
+```
+
+Set the keys in `keys.js`
+
+```
 npm install
 npm start
 ```
@@ -21,6 +27,21 @@ Make sure you have the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed
 ```
 heroku create
 git push heroku master
+```
+
+Set the keys in Heroku's config variables, or via the command line:
+
+```
+heroku config:set shopifyAPIkey=<yourshopifyapikey>
+heroku config:set shopifyPassword=<yourshopifypassword>
+heroku config:set shopifyURL=<yourshopifystoreurl>.myshopify.com
+heroku config:set shopifyBlogID=<yourshopifyblogid>
+heroku config:set shopifyBlogURL=https://<yourshopifystoreurl>.myshopify.com/blog/<youshopifyblogname>/
+heroku config:set camayak_api_key=<yourcamayakapikey>
+heroku config:set camayak_shared_secret=<yourcamayaksharedsecret>
+```
+
+```
 heroku open
 ```
 
