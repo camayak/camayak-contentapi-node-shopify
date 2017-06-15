@@ -14,6 +14,12 @@ var keys = require('./keys');
 app = express();
 app.use(bodyParser());
 
+for (akey in keys) {
+    if (!keys[akey]) {
+        console.warn(akey + " is not set. This may cause errors. Please set the variable and restart.")
+    }
+}
+
 // Create a new Camayak API Object
 let camayak = new CamayakContentAPI({
     // Heroku specifies the port in "prod", otherwise use port 5000 locally.
