@@ -63,7 +63,7 @@ exports.publish = function(webhook, response) {
         // Set additional custom metadata
         if (response.metadata["shopify-meta"]) {
             if (!(shopify_request.article.metafields)) {
-                shopify_request.article.metafield = [];
+                shopify_request.article.metafields = [];
             } else if (shopify_request.article.metafields["description_tag"]) {
                 for (var i = 0; i < shopify_request.article.metafields.length; i++) {
                     if (shopify_request.article.metafields[i].key == "description_tag") {
@@ -81,7 +81,7 @@ exports.publish = function(webhook, response) {
         }
         if (response.metadata["shopify-title"]) {
             if (!(shopify_request.article.metafields)) {
-                shopify_request.article.metafield = [];
+                shopify_request.article.metafields = [];
             } else if (shopify_request.article.metafields["title_tag"]) {
                 for (var i = 0; i < shopify_request.article.metafields.length; i++) {
                     if (shopify_request.article.metafields[i].key == "title_tag") {
