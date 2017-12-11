@@ -61,7 +61,7 @@ exports.publish = function(webhook, response) {
         }
 
         // Set additional custom metadata
-        if (response["shopify-meta"]) {
+        if (response.metadata["shopify-meta"]) {
             if (!(shopify_request.article.metafields)) {
                 shopify_request.article.metafield = [];
             } else if (shopify_request.article.metafields["description_tag"]) {
@@ -74,12 +74,12 @@ exports.publish = function(webhook, response) {
             }
             shopify_request.article.metafields.push({
                 "key": "description_tag",
-                "value": response["shopify-meta"],
+                "value": response.metadata["shopify-meta"],
                 "value_type": "string",
                 "namespace": "global"
             });
         }
-        if (response["shopify-title"]) {
+        if (response.metadata["shopify-title"]) {
             if (!(shopify_request.article.metafields)) {
                 shopify_request.article.metafield = [];
             } else if (shopify_request.article.metafields["title_tag"]) {
@@ -92,13 +92,13 @@ exports.publish = function(webhook, response) {
             }
             shopify_request.article.metafields.push({
                 "key": "title_tag",
-                "value": response["shopify-title"],
+                "value": response.metadata["shopify-title"],
                 "value_type": "string",
                 "namespace": "global"
             });
         }
-        if (response["shopify-handle"]) {
-            shopify_request.handle = response["shopify-handle"];
+        if (response.metadata["shopify-handle"]) {
+            shopify_request.handle = response.metadata["shopify-handle"];
         }
 
         // Set the tags to the tags given from Camayak if they exist
