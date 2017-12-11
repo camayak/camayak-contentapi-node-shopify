@@ -59,6 +59,47 @@ exports.publish = function(webhook, response) {
             }
         }
 
+        // Set additional custom metadata
+        if (response["shopify-meta"]) {
+            if (!(shopify_request.article.metafields)) {
+                shopify_request.article.metafield = [];
+            } else if (shopify_request.article.metafields["description_tag"]) {
+                for (var i = 0; i < shopify_request.article.metafields.length; i++) {
+                    if (shopify_request.article.metafields[i].key == "description_tag") {
+                        data.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            shopify_request.article.metafields.push({
+                "key": "description_tag",
+                "value": response["shopify-meta"],
+                "value_type": "string",
+                "namespace": "global"
+            });
+        }
+        if (response["shopify-title"]) {
+            if (!(shopify_request.article.metafields)) {
+                shopify_request.article.metafield = [];
+            } else if (shopify_request.article.metafields["title_tag"]) {
+                for (var i = 0; i < shopify_request.article.metafields.length; i++) {
+                    if (shopify_request.article.metafields[i].key == "title_tag") {
+                        data.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            shopify_request.article.metafields.push({
+                "key": "title_tag",
+                "value": response["shopify-title"],
+                "value_type": "string",
+                "namespace": "global"
+            });
+        }
+        if (response["shopify-handle"]) {
+            shopify_request.handle = response["shopify-handle"];
+        }
+
         // Set the tags to the tags given from Camayak if they exist
         shopify_request.article.tags = "";
         if (response.taxonomies.Tags) {
