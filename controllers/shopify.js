@@ -10,6 +10,7 @@ var exports = module.exports = {};
 exports.publish = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
+        console.log("Camayak response: %j", response);
         if (response.published_id) {
             // If the published_id is set, then we are updating the post.
             console.log("Attempting to Update Post");
@@ -109,7 +110,9 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the article to published on Shopify
-        shopify_request.article.published = true
+        shopify_request.article.published = true;
+
+        console.log("Shopify request: %j", shopify_request);
 
         // Send the built request to Shopify
         request({
