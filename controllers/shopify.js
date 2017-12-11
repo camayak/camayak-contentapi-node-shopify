@@ -114,6 +114,11 @@ exports.publish = function(webhook, response) {
 
         console.log("Shopify request: %j", shopify_request);
 
+        var returnURL = null;
+        if (response.metadata["shopify-handle"]) {
+            returnURL = keys.shopifyBlogURL + response.metadata["shopify-handle"];
+        }
+
         // Send the built request to Shopify
         request({
             // These are set above depending on if the article is being published or updated
@@ -124,9 +129,7 @@ exports.publish = function(webhook, response) {
             // If there isn't an error
             if (!error && (response.statusCode == 201 || response.statusCode == 200) && response.body.article.id) {
                 console.log("Successfully updated or published post with id: " + response.body.article.id);
-                if (response.metadata["shopify-handle"]) {
-                    returnURL = keys.shopifyBlogURL + response.metadata["shopify-handle"];
-                } else {
+                if (!(returnURL) {
                     returnURL = keys.shopifyBlogURL + response.body.article.id;
                 }
                 // Return the published_id and published_url to Camayak in JSON
