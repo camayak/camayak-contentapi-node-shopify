@@ -129,7 +129,7 @@ exports.publish = function(webhook, response) {
             // If there isn't an error
             if (!error && (response.statusCode == 201 || response.statusCode == 200) && response.body.article.id) {
                 console.log("Successfully updated or published post with id: " + response.body.article.id);
-                if (!(returnURL) {
+                if (!(returnURL)) {
                     returnURL = keys.shopifyBlogURL + response.body.article.id;
                 }
                 // Return the published_id and published_url to Camayak in JSON
