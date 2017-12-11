@@ -98,7 +98,7 @@ exports.publish = function(webhook, response) {
             });
         }
         if (response.metadata["shopify-handle"]) {
-            shopify_request.handle = response.metadata["shopify-handle"];
+            shopify_request.article.handle = response.metadata["shopify-handle"];
         }
 
         // Set the tags to the tags given from Camayak if they exist
