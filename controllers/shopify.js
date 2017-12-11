@@ -10,7 +10,6 @@ var exports = module.exports = {};
 exports.publish = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
-        console.log("Camayak response: %j", response);
         if (response.published_id) {
             // If the published_id is set, then we are updating the post.
             console.log("Attempting to Update Post");
@@ -22,7 +21,6 @@ exports.publish = function(webhook, response) {
             request_method = "POST";
             request_uri = "https://" + keys.shopifyAPIkey + ":" + keys.shopifyPassword + "@" + keys.shopifyURL + "/admin/blogs/" + keys.shopifyBlogID + "/articles.json";
         }
-
 
         // Build the request JSON
         var shopify_request = {
@@ -60,7 +58,7 @@ exports.publish = function(webhook, response) {
             }
         }
 
-        // Set additional custom metadata
+        // Set the article SEO meta description if one exists
         if (response.metadata["shopify-meta"]) {
             if (!(shopify_request.article.metafields)) {
                 shopify_request.article.metafields = [];
@@ -79,6 +77,8 @@ exports.publish = function(webhook, response) {
                 "namespace": "global"
             });
         }
+
+        // Set the page title if one exists
         if (response.metadata["shopify-title"]) {
             if (!(shopify_request.article.metafields)) {
                 shopify_request.article.metafields = [];
@@ -97,6 +97,8 @@ exports.publish = function(webhook, response) {
                 "namespace": "global"
             });
         }
+
+        // Set the URL handle if one exists
         if (response.metadata["shopify-handle"]) {
             shopify_request.article.handle = response.metadata["shopify-handle"];
         }
@@ -112,8 +114,7 @@ exports.publish = function(webhook, response) {
         // Set the article to published on Shopify
         shopify_request.article.published = true;
 
-        console.log("Shopify request: %j", shopify_request);
-
+        // Construct the correct URL if a handle was given.
         var returnURL = null;
         if (response.metadata["shopify-handle"]) {
             returnURL = keys.shopifyBlogURL + response.metadata["shopify-handle"];
@@ -129,6 +130,7 @@ exports.publish = function(webhook, response) {
             // If there isn't an error
             if (!error && (response.statusCode == 201 || response.statusCode == 200) && response.body.article.id) {
                 console.log("Successfully updated or published post with id: " + response.body.article.id);
+                // If no URL was created from the handle, fall back to the article ID.
                 if (!(returnURL)) {
                     returnURL = keys.shopifyBlogURL + response.body.article.id;
                 }
