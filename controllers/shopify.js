@@ -45,7 +45,7 @@ exports.publish = function(webhook, response) {
         // Set the body to the content from Camayak if it exists
         if (response.content) {
             // Shopify won't move images to their hosting unless the image is embedded using HTTP, so replace Camayak's HTTPS embeds with HTTP.
-            shopify_request.article.body_html = response.content.replace(/src="https:\/\//gi,'src="http://');
+            shopify_request.article.body_html = response.content.replace(/src="https:\/\//gi,'src="test://');
         }
 
         // Set the article image to a featured image from Camayak if one exists
