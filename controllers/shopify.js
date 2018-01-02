@@ -120,6 +120,8 @@ exports.publish = function(webhook, response) {
             returnURL = keys.shopifyBlogURL + response.metadata["shopify-handle"];
         }
 
+        console.log(shopify_request);
+
         // Send the built request to Shopify
         request({
             // These are set above depending on if the article is being published or updated
@@ -128,8 +130,10 @@ exports.publish = function(webhook, response) {
             json: shopify_request
         }, function(error, response, body) {
             // If there isn't an error
-            console.log("Response Code: " + response.statusCode);
-            if (!error && (response.statusCode == 201 || response.statusCode == 200)) {
+            if (!error) {
+                if (!(response.statusCode == 201 || response.statusCode == 200)) {
+                    throw new Error("Got status code " + response.statusCode + " from Shopify API.");
+                }
                 if (typeof response.body.article.id !== "undefined") {
                     thisArticleID = response.body.article.id;
                 } else {
