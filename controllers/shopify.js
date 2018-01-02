@@ -128,6 +128,7 @@ exports.publish = function(webhook, response) {
             json: shopify_request
         }, function(error, response, body) {
             // If there isn't an error
+            console.log("Response Code: " + response.statusCode + ", article ID: " + response.body.article.id);
             if (!error && (response.statusCode == 201 || response.statusCode == 200) && response.body.article.id) {
                 console.log("Successfully updated or published post with id: " + response.body.article.id);
                 // If no URL was created from the handle, fall back to the article ID.
