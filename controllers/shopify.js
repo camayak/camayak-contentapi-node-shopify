@@ -128,6 +128,7 @@ exports.publish = function(webhook, response) {
             json: shopify_request
         }, function(error, response, body) {
             // If there isn't an error
+            console.log("Response Code: " + response.statusCode);
             if (!error && (response.statusCode == 201 || response.statusCode == 200)) {
                 if (typeof response.body.article.id !== "undefined") {
                     thisArticleID = response.body.article.id;
