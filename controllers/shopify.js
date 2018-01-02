@@ -9,7 +9,7 @@ var exports = module.exports = {};
 // This function handles publish events.
 exports.publish = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
-    try {
+    // try {
         if (typeof response.published_id !== 'undefined') {
             // If the published_id is set, then we are updating the post.
             console.log("Attempting to Update Post");
@@ -148,16 +148,16 @@ exports.publish = function(webhook, response) {
                 return webhook.fail(body);
             }
         });
-    } catch (error) {
-        console.log("Error updating or publishing post. Details:");
-        console.log(error);
-    }
+    // } catch (error) {
+    //     console.log("Error updating or publishing post. Details:");
+    //     console.log(error);
+    // }
 }
 
 // This function handles retract events.
 exports.retract = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
-    try {
+    // try {
         if (typeof response.published_id !== 'undefined') {
             console.log("Attempting to retract post with id: " + response.published_id);
 
@@ -188,8 +188,8 @@ exports.retract = function(webhook, response) {
         } else {
             console.log("Unable to retract post. No id provided.");
         }
-    } catch (error) {
-        console.log("Error retracting post. Details:");
-        console.log(error);
-    }
+    // } catch (error) {
+    //     console.log("Error retracting post. Details:");
+    //     console.log(error);
+    // }
 }
