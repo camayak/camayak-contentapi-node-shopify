@@ -128,16 +128,20 @@ exports.publish = function(webhook, response) {
             json: shopify_request
         }, function(error, response, body) {
             // If there isn't an error
-            console.log("Response Code: " + response.statusCode + ", article ID: " + response.body.article.id);
-            if (!error && (response.statusCode == 201 || response.statusCode == 200) && response.body.article.id) {
-                console.log("Successfully updated or published post with id: " + response.body.article.id);
+            if (!error && (response.statusCode == 201 || response.statusCode == 200)) {
+                if (typeof response.body.article.id !== "undefined") {
+                    thisArticleID = response.body.article.id;
+                } else {
+                    thisArticleID = response.published_id;
+                }
+                console.log("Successfully updated or published post with id: " + thisArticleID);
                 // If no URL was created from the handle, fall back to the article ID.
                 if (!(returnURL)) {
-                    returnURL = keys.shopifyBlogURL + response.body.article.id;
+                    returnURL = keys.shopifyBlogURL + thisArticleID;
                 }
                 // Return the published_id and published_url to Camayak in JSON
                 var returnJSON = {
-                    published_id: response.body.article.id,
+                    published_id: thisArticleID,
                     published_url: returnURL
                 };
                 return webhook.succeed(returnJSON);
