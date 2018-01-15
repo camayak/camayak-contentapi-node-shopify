@@ -10,11 +10,18 @@ var exports = module.exports = {};
 exports.publish = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
+
+        if (keys.debugging_mode == "true") {
+            console.log("Response from Camayak:");
+            console.log(response);
+        }
+
         if (response.published_id) {
             // If the published_id is set, then we are updating the post.
             console.log("Attempting to Update Post");
             request_method = "PUT";
             request_uri = "https://" + keys.shopifyAPIkey + ":" + keys.shopifyPassword + "@" + keys.shopifyURL + "/admin/blogs/" + keys.shopifyBlogID + "/articles/" + response.published_id + ".json";
+
         } else {
             // Otherwise we are publishing the post for the first time.
             console.log("Attempting to Publish Post");
@@ -32,13 +39,13 @@ exports.publish = function(webhook, response) {
             shopify_request.article.title = response.heading;
         }
 
-        // Set the summary to subheading from Camayak if one exists
-        if (response.subheading) {
-            shopify_request.article.summary_html = response.subheading;
+        // Set the summary to teaser from Camayak if one exists
+        if (response.teaser) {
+            shopify_request.article.summary_html = response.teaser;
         }
 
         // Set the author to the first byline from Camayak if one exists
-        if (response.bylines) {
+        if (response.bylines.length > 0) {
             shopify_request.article.author = response.bylines[0].first_name + " " + response.bylines[0].last_name;
         }
 
@@ -48,7 +55,7 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the article image to a featured image from Camayak if one exists
-        if (response.media) {
+        if (response.media.length > 0) {
             for (media in response.media) {
                 if (response.media[media].featured) {
                     shopify_request.article.image = {
@@ -59,10 +66,10 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the article SEO meta description if one exists
-        if (response.metadata["shopify-meta"]) {
-            if (!(shopify_request.article.metafields)) {
-                shopify_request.article.metafields = [];
-            } else if (shopify_request.article.metafields["description_tag"]) {
+        if (typeof response.metadata["shopify-meta"] !== 'undefined') {
+            if (typeof shopify_request.article.metafields == 'undefined') {
+                shopify_request.article.metafields = []; // reset the metafields
+            } else if (typeof shopify_request.article.metafields["description_tag"] !== 'undefined') {
                 for (var i = 0; i < shopify_request.article.metafields.length; i++) {
                     if (shopify_request.article.metafields[i].key == "description_tag") {
                         data.splice(i, 1);
@@ -79,10 +86,10 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the page title if one exists
-        if (response.metadata["shopify-title"]) {
-            if (!(shopify_request.article.metafields)) {
+        if (typeof response.metadata["shopify-title"] !== 'undefined') {
+            if (typeof shopify_request.article.metafields == 'undefined') {
                 shopify_request.article.metafields = [];
-            } else if (shopify_request.article.metafields["title_tag"]) {
+            } else if (typeof shopify_request.article.metafields["title_tag"] !== 'undefined') {
                 for (var i = 0; i < shopify_request.article.metafields.length; i++) {
                     if (shopify_request.article.metafields[i].key == "title_tag") {
                         data.splice(i, 1);
@@ -99,7 +106,7 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the URL handle if one exists
-        if (response.metadata["shopify-handle"]) {
+        if (typeof response.metadata["shopify-handle"] !== 'undefined') {
             shopify_request.article.handle = response.metadata["shopify-handle"];
         }
 
@@ -120,6 +127,12 @@ exports.publish = function(webhook, response) {
             returnURL = keys.shopifyBlogURL + response.metadata["shopify-handle"];
         }
 
+        if (keys.debugging_mode == "true") {
+            console.log("Request for Shopify:");
+            console.log("URI: " + request_uri + ", Method: " + request_method + ", JSON:");
+            console.log(shopify_request);
+        }
+
         // Send the built request to Shopify
         request({
             // These are set above depending on if the article is being published or updated
@@ -128,15 +141,23 @@ exports.publish = function(webhook, response) {
             json: shopify_request
         }, function(error, response, body) {
             // If there isn't an error
-            if (!error && (response.statusCode == 201 || response.statusCode == 200) && response.body.article.id) {
-                console.log("Successfully updated or published post with id: " + response.body.article.id);
+            if (!error) {
+                if (!(response.statusCode == 201 || response.statusCode == 200)) {
+                    throw new Error("Got status code " + response.statusCode + " from Shopify API.");
+                }
+                if (response.body.article.id !== "undefined") {
+                    thisArticleID = response.body.article.id;
+                } else {
+                    thisArticleID = response.published_id;
+                }
+                console.log("Successfully updated or published post with id: " + thisArticleID);
                 // If no URL was created from the handle, fall back to the article ID.
                 if (!(returnURL)) {
-                    returnURL = keys.shopifyBlogURL + response.body.article.id;
+                    returnURL = keys.shopifyBlogURL + thisArticleID;
                 }
                 // Return the published_id and published_url to Camayak in JSON
                 var returnJSON = {
-                    published_id: response.body.article.id,
+                    published_id: thisArticleID,
                     published_url: returnURL
                 };
                 return webhook.succeed(returnJSON);
@@ -158,6 +179,12 @@ exports.publish = function(webhook, response) {
 exports.retract = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
+
+        if (keys.debugging_mode == "true") {
+            console.log("Response from Camayak:");
+            console.log(response);
+        }
+
         if (response.published_id) {
             console.log("Attempting to retract post with id: " + response.published_id);
 
@@ -169,9 +196,18 @@ exports.retract = function(webhook, response) {
                 }
             }
 
+            request_uri = "https://" + keys.shopifyAPIkey + ":" + keys.shopifyPassword + "@" + keys.shopifyURL + "/admin/blogs/" + keys.shopifyBlogID + "/articles/" + response.published_id + ".json";
+            request_method = "PUT";
+
+            if (keys.debugging_mode == "true") {
+                console.log("Request for Shopify:");
+                console.log("URI: " + request_uri + ", Method: " + request_method + ", JSON:");
+                console.log(shopify_request);
+            }
+
             request({
-                uri: "https://" + keys.shopifyAPIkey + ":" + keys.shopifyPassword + "@" + keys.shopifyURL + "/admin/blogs/" + keys.shopifyBlogID + "/articles/" + response.published_id + ".json",
-                method: 'PUT',
+                uri: request_uri,
+                method: request_method,
                 json: shopify_request
             }, function(error, response, body) {
                 if (!error && response.statusCode == 200) {

@@ -20,6 +20,10 @@ for (akey in keys) {
     }
 }
 
+if (keys.debugging_mode == "true") {
+    console.warn("Debugging mode is on. Turn this off in production. See keys.js");
+}
+
 // Create a new Camayak API Object
 let camayak = new CamayakContentAPI({
     // Heroku specifies the port in "prod", otherwise use port 5000 locally.
