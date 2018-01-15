@@ -35,6 +35,10 @@
         "camayak_shared_secret": {
             "description": "A shared secret for signing Camayak requests. (Copy and paste this into Camayak)",
             "generator": "secret"
+        },
+        "debugging_mode": {
+            "description": "Enable or disable debugging mode.",
+            "value": "false"
         }
     }
 }
