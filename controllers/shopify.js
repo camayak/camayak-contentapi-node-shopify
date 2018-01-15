@@ -33,9 +33,9 @@ exports.publish = function(webhook, response) {
             shopify_request.article.title = response.heading;
         }
 
-        // Set the summary to slug from Camayak if one exists
-        if (response.slug) {
-            shopify_request.article.summary_html = response.slug;
+        // Set the summary to subheading from Camayak if one exists
+        if (response.subheading) {
+            shopify_request.article.summary_html = response.subheading;
         }
 
         // Set the author to the first byline from Camayak if one exists
