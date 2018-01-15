@@ -10,12 +10,12 @@ var exports = module.exports = {};
 exports.publish = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
-      
+
         if (keys.debugging_mode) {
             console.log("Response from Camayak:");
             console.log(response);
         }
-      
+
         if (typeof response.published_id !== 'undefined') {
 
             // If the published_id is set, then we are updating the post.
@@ -129,6 +129,7 @@ exports.publish = function(webhook, response) {
 
         if (keys.debugging_mode) {
             console.log("Request for Shopify:");
+            console.log("URI: " + request_uri + ", Method: " + request_method + ", JSON:");
             console.log(shopify_request);
         }
 
@@ -178,12 +179,12 @@ exports.publish = function(webhook, response) {
 exports.retract = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
-      
+
         if (keys.debugging_mode) {
             console.log("Response from Camayak:");
             console.log(response);
         }
-      
+
         if (typeof response.published_id !== 'undefined') {
             console.log("Attempting to retract post with id: " + response.published_id);
 
@@ -195,14 +196,18 @@ exports.retract = function(webhook, response) {
                 }
             }
 
+            request_uri = "https://" + keys.shopifyAPIkey + ":" + keys.shopifyPassword + "@" + keys.shopifyURL + "/admin/blogs/" + keys.shopifyBlogID + "/articles/" + response.published_id + ".json";
+            request_method = "PUT";
+
             if (keys.debugging_mode) {
                 console.log("Request for Shopify:");
+                console.log("URI: " + request_uri + ", Method: " + request_method + ", JSON:");
                 console.log(shopify_request);
             }
 
             request({
-                uri: "https://" + keys.shopifyAPIkey + ":" + keys.shopifyPassword + "@" + keys.shopifyURL + "/admin/blogs/" + keys.shopifyBlogID + "/articles/" + response.published_id + ".json",
-                method: 'PUT',
+                uri: request_uri,
+                method: request_method,
                 json: shopify_request
             }, function(error, response, body) {
                 if (!error && response.statusCode == 200) {
