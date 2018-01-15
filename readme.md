@@ -39,6 +39,7 @@ heroku config:set shopifyBlogID=<yourshopifyblogid>
 heroku config:set shopifyBlogURL=https://<yourshopifystoreurl>.myshopify.com/blog/<youshopifyblogname>/
 heroku config:set camayak_api_key=<yourcamayakapikey>
 heroku config:set camayak_shared_secret=<yourcamayaksharedsecret>
+heroku config:set debugging_mode=false
 ```
 
 ```
@@ -48,3 +49,6 @@ heroku open
 Alternatively, you can deploy your own copy of the app using the web-based flow:
 
 [![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+## Debugging
+You can set the `debugging_mode` variable to `true` to enable debugging mode, which provides additional messages to the console for debugging purposes. Do not enable this mode in production.
