@@ -59,7 +59,6 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the article SEO meta description if one exists
-        console.log("Response meta: " + response.metadata["shopify-meta"]);
         if (typeof response.metadata["shopify-meta"] !== 'undefined') {
             if (typeof shopify_request.article.metafields == 'undefined') {
                 shopify_request.article.metafields = [];
@@ -120,8 +119,6 @@ exports.publish = function(webhook, response) {
         if (response.metadata["shopify-handle"]) {
             returnURL = keys.shopifyBlogURL + response.metadata["shopify-handle"];
         }
-
-        console.log(shopify_request);
 
         // Send the built request to Shopify
         request({
