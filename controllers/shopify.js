@@ -16,12 +16,12 @@ exports.publish = function(webhook, response) {
             console.log(response);
         }
 
-        if (typeof response.published_id !== 'undefined') {
-
+        if (response.published_id) {
             // If the published_id is set, then we are updating the post.
             console.log("Attempting to Update Post");
             request_method = "PUT";
             request_uri = "https://" + keys.shopifyAPIkey + ":" + keys.shopifyPassword + "@" + keys.shopifyURL + "/admin/blogs/" + keys.shopifyBlogID + "/articles/" + response.published_id + ".json";
+
         } else {
             // Otherwise we are publishing the post for the first time.
             console.log("Attempting to Publish Post");
@@ -35,27 +35,27 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the title to heading from Camayak if one exists
-        if (typeof response.heading !== 'undefined') {
+        if (response.heading) {
             shopify_request.article.title = response.heading;
         }
 
         // Set the summary to subheading from Camayak if one exists
-        if (typeof response.subheading !== 'undefined') {
+        if (response.subheading) {
             shopify_request.article.summary_html = response.subheading;
         }
 
         // Set the author to the first byline from Camayak if one exists
-        if (typeof response.bylines !== 'undefined') {
+        if (response.bylines.length > 0) {
             shopify_request.article.author = response.bylines[0].first_name + " " + response.bylines[0].last_name;
         }
 
         // Set the body to the content from Camayak if it exists
-        if (typeof response.content !== 'undefined') {
+        if (response.content) {
             shopify_request.article.body_html = response.content;
         }
 
         // Set the article image to a featured image from Camayak if one exists
-        if (typeof response.media !== 'undefined') {
+        if (response.media.length > 0) {
             for (media in response.media) {
                 if (response.media[media].featured) {
                     shopify_request.article.image = {
@@ -66,10 +66,10 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the article SEO meta description if one exists
-        if (typeof response.metadata["shopify-meta"] !== 'undefined') {
-            if (typeof shopify_request.article.metafields == 'undefined') {
+        if (response.metadata["shopify-meta"]) {
+            if (shopify_request.article.metafields) {
                 shopify_request.article.metafields = [];
-            } else if (typeof shopify_request.article.metafields["description_tag"] !== 'undefined') {
+            } else if (shopify_request.article.metafields["description_tag"]) {
                 for (var i = 0; i < shopify_request.article.metafields.length; i++) {
                     if (shopify_request.article.metafields[i].key == "description_tag") {
                         data.splice(i, 1);
@@ -86,10 +86,10 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the page title if one exists
-        if (typeof response.metadata["shopify-title"] !== 'undefined') {
-            if (typeof shopify_request.article.metafields == 'undefined') {
+        if (response.metadata["shopify-title"]) {
+            if (shopify_request.article.metafields) {
                 shopify_request.article.metafields = [];
-            } else if (typeof shopify_request.article.metafields["title_tag"] !== 'undefined') {
+            } else if (shopify_request.article.metafields["title_tag"]) {
                 for (var i = 0; i < shopify_request.article.metafields.length; i++) {
                     if (shopify_request.article.metafields[i].key == "title_tag") {
                         data.splice(i, 1);
@@ -106,13 +106,13 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the URL handle if one exists
-        if (typeof response.metadata["shopify-handle"] !== 'undefined') {
+        if (response.metadata["shopify-handle"]) {
             shopify_request.article.handle = response.metadata["shopify-handle"];
         }
 
         // Set the tags to the tags given from Camayak if they exist
         shopify_request.article.tags = "";
-        if (typeof response.taxonomies.Tags !== 'undefined') {
+        if (response.taxonomies.Tags) {
             for (tag in response.taxonomies.Tags.values) {
                 shopify_request.article.tags += response.taxonomies.Tags.values[tag].value + ", ";
             }
@@ -145,7 +145,7 @@ exports.publish = function(webhook, response) {
                 if (!(response.statusCode == 201 || response.statusCode == 200)) {
                     throw new Error("Got status code " + response.statusCode + " from Shopify API.");
                 }
-                if (typeof response.body.article.id !== "undefined") {
+                if (response.body.article.id !== "undefined") {
                     thisArticleID = response.body.article.id;
                 } else {
                     thisArticleID = response.published_id;
@@ -185,7 +185,7 @@ exports.retract = function(webhook, response) {
             console.log(response);
         }
 
-        if (typeof response.published_id !== 'undefined') {
+        if (response.published_id) {
             console.log("Attempting to retract post with id: " + response.published_id);
 
             // Build the request
