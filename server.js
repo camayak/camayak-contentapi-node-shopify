@@ -20,7 +20,7 @@ for (akey in keys) {
     }
 }
 
-if (keys.debugging_mode) {
+if (keys.debugging_mode == "true") {
     console.warn("Debugging mode is on. Turn this off in production. See keys.js");
 }
 
