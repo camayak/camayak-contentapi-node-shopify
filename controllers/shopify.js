@@ -66,10 +66,10 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the article SEO meta description if one exists
-        if (typeof response.metadata["shopify-meta"] !== undefined) {
-            if (shopify_request.article.metafields) {
+        if (typeof response.metadata["shopify-meta"] !== 'undefined') {
+            if (typeof shopify_request.article.metafields == 'undefined') {
                 shopify_request.article.metafields = []; // reset the metafields
-            } else if (typeof shopify_request.article.metafields["description_tag"] !== undefined) {
+            } else if (typeof shopify_request.article.metafields["description_tag"] !== 'undefined') {
                 for (var i = 0; i < shopify_request.article.metafields.length; i++) {
                     if (shopify_request.article.metafields[i].key == "description_tag") {
                         data.splice(i, 1);
@@ -86,10 +86,10 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the page title if one exists
-        if (response.metadata["shopify-title"]) {
-            if (shopify_request.article.metafields) {
+        if (typeof response.metadata["shopify-title"] !== 'undefined') {
+            if (typeof shopify_request.article.metafields == 'undefined') {
                 shopify_request.article.metafields = [];
-            } else if (shopify_request.article.metafields["title_tag"]) {
+            } else if (typeof shopify_request.article.metafields["title_tag"] !== 'undefined') {
                 for (var i = 0; i < shopify_request.article.metafields.length; i++) {
                     if (shopify_request.article.metafields[i].key == "title_tag") {
                         data.splice(i, 1);
@@ -106,7 +106,7 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the URL handle if one exists
-        if (response.metadata["shopify-handle"]) {
+        if (typeof response.metadata["shopify-handle"] !== 'undefined') {
             shopify_request.article.handle = response.metadata["shopify-handle"];
         }
 
