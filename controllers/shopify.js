@@ -10,7 +10,6 @@ var exports = module.exports = {};
 exports.publish = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
-        console.log(response);
         if (response.published_id) {
             // If the published_id is set, then we are updating the post.
             console.log("Attempting to Update Post");
