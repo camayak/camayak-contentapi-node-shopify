@@ -66,10 +66,10 @@ exports.publish = function(webhook, response) {
         }
 
         // Set the article SEO meta description if one exists
-        if (response.metadata["shopify-meta"]) {
+        if (typeof response.metadata["shopify-meta"] !== undefined) {
             if (shopify_request.article.metafields) {
-                shopify_request.article.metafields = [];
-            } else if (shopify_request.article.metafields["description_tag"]) {
+                shopify_request.article.metafields = []; // reset the metafields
+            } else if (typeof shopify_request.article.metafields["description_tag"] !== undefined) {
                 for (var i = 0; i < shopify_request.article.metafields.length; i++) {
                     if (shopify_request.article.metafields[i].key == "description_tag") {
                         data.splice(i, 1);
