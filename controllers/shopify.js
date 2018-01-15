@@ -11,7 +11,7 @@ exports.publish = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
 
-        if (keys.debugging_mode) {
+        if (keys.debugging_mode == "true") {
             console.log("Response from Camayak:");
             console.log(response);
         }
@@ -127,7 +127,7 @@ exports.publish = function(webhook, response) {
             returnURL = keys.shopifyBlogURL + response.metadata["shopify-handle"];
         }
 
-        if (keys.debugging_mode) {
+        if (keys.debugging_mode == "true") {
             console.log("Request for Shopify:");
             console.log("URI: " + request_uri + ", Method: " + request_method + ", JSON:");
             console.log(shopify_request);
@@ -180,7 +180,7 @@ exports.retract = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
 
-        if (keys.debugging_mode) {
+        if (keys.debugging_mode == "true") {
             console.log("Response from Camayak:");
             console.log(response);
         }
@@ -199,7 +199,7 @@ exports.retract = function(webhook, response) {
             request_uri = "https://" + keys.shopifyAPIkey + ":" + keys.shopifyPassword + "@" + keys.shopifyURL + "/admin/blogs/" + keys.shopifyBlogID + "/articles/" + response.published_id + ".json";
             request_method = "PUT";
 
-            if (keys.debugging_mode) {
+            if (keys.debugging_mode == "true") {
                 console.log("Request for Shopify:");
                 console.log("URI: " + request_uri + ", Method: " + request_method + ", JSON:");
                 console.log(shopify_request);
