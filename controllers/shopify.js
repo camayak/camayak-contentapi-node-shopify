@@ -10,7 +10,14 @@ var exports = module.exports = {};
 exports.publish = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
+      
+        if (keys.debugging_mode) {
+            console.log("Response from Camayak:");
+            console.log(response);
+        }
+      
         if (typeof response.published_id !== 'undefined') {
+
             // If the published_id is set, then we are updating the post.
             console.log("Attempting to Update Post");
             request_method = "PUT";
@@ -120,6 +127,11 @@ exports.publish = function(webhook, response) {
             returnURL = keys.shopifyBlogURL + response.metadata["shopify-handle"];
         }
 
+        if (keys.debugging_mode) {
+            console.log("Request for Shopify:");
+            console.log(shopify_request);
+        }
+
         // Send the built request to Shopify
         request({
             // These are set above depending on if the article is being published or updated
@@ -166,6 +178,12 @@ exports.publish = function(webhook, response) {
 exports.retract = function(webhook, response) {
     // Wrapping in a try-catch so that server won't crash if an error occurs.
     try {
+      
+        if (keys.debugging_mode) {
+            console.log("Response from Camayak:");
+            console.log(response);
+        }
+      
         if (typeof response.published_id !== 'undefined') {
             console.log("Attempting to retract post with id: " + response.published_id);
 
@@ -175,6 +193,11 @@ exports.retract = function(webhook, response) {
                     "id": response.published_id,
                     "published": false
                 }
+            }
+
+            if (keys.debugging_mode) {
+                console.log("Request for Shopify:");
+                console.log(shopify_request);
             }
 
             request({

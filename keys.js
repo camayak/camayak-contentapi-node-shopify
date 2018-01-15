@@ -8,5 +8,7 @@ module.exports = {
     shopifyBlogURL: process.env.shopifyBlogURL,
 
     camayak_api_key: process.env.camayak_api_key,
-    camayak_shared_secret: process.env.camayak_shared_secret
+    camayak_shared_secret: process.env.camayak_shared_secret,
+
+    debugging_mode: process.env.debugging_mode
 };
